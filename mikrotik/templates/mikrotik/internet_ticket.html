@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"> <head>
+  <title>Vouchers</title>
+  <style type="text/css">
+      @page {
+          size: A4;
+          margin: 1cm;
+      }
+      @media all {
+      .noprint {     display: none;   }
+      }
+
+      @media print {
+      .page-break { display: block; page-break-after: always; }
+      }
+  </style>
+</head>
+<body>
+  {% for p in ticket %}
+  <table style="display: inline-block; width: 200px; border: 2px solid #000000; line-height: 110%; font-family: arial; font-size: 12px; margin: 1px;">
+    <tbody> <tr> <td style="text-align: center; color: black;"><br><b>INTERNET TICKET</b></td> </tr>  <tr> <td>
+      <table style=" text-align: center; width: 190px; background-color: #fff; ">
+        <tbody> <tr style="color: black; font-size: 12px;"> </tr>
+          <tr style="background-color: #fff;">
+            <td style="color: black; border: 1px #000000 solid;"><h1>{{p.username}}</h1>
+            </td>
+          </tr>
+        </tbody>
+      </table></td> </tr>
+    </tbody>
+  </table>
+  {% endfor %}
+</body>
+</html>
+<p class="noprint" style="font-size: 10px">   ................ page break ................ </p> <p class="pagebreak">&nbsp;</p>

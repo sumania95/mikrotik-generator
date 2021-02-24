@@ -1,0 +1,81 @@
+{% load crispy_forms_tags %}
+{% load static %}
+<form method="POST" enctype="multipart/form-data" data-url="{% url 'base_form' %}" class="text-primary text-left custom-form">
+  {{number_ticket|crispy}}
+  {{voucher|crispy}}
+  <div class="row m-t-30">
+      <div class="col-md-12">
+          <button type="submit" id="btn-submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Generate</button>
+      </div>
+  </div>
+</form>
+
+
+{% block 'script' %}
+<script>
+  $(document).ready(function () {
+    function getCookie(name) {
+      var cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+          var cookie = jQuery.trim(cookies[i]);
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    function csrfSafeMethod(method) {
+      // these HTTP methods do not require CSRF protection
+      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    };
+
+    $(".custom-form").submit(function (event) {
+      event.preventDefault();
+      var form = $(this);
+      $.ajax({
+        url: form.attr('data-url'),
+        data: form.serialize(),
+        type: form.attr('method'),
+        dataType: 'json',
+        beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+          $("#btn-submit").attr("disabled", true);
+
+        },
+        success: function(data){
+          $("#btn-submit").attr("disabled", false);
+          Toast.fire({
+            type: data.message_type,
+            title: data.message_title
+          });
+          if (data.url_print){
+            window.open(
+              data.url_print,
+              '_blank' // <- This is what makes it open in a new window.
+            );
+          }
+          form_load();
+        },
+        error:function(error){
+          $("#btn-submit").attr("disabled", false);
+          Toast.fire({
+            type: 'error',
+            title: 'ERROR Connection Lost.'
+          });
+        },
+      })
+      return false;
+    });
+
+  });
+
+</script>
+{% endblock %}
