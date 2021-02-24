@@ -12,7 +12,7 @@ class User_Profile(models.Model):
         return str(self.user_profile)
 
 class Number_Ticket(models.Model):
-    prefix = models.CharField(max_length = 200)
+    prefix = models.CharField(max_length = 2)
     number_ticket = models.IntegerField(default = 30)
     user_profile = models.ForeignKey(User_Profile, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add = True)
